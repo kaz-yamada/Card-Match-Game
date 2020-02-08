@@ -1,12 +1,23 @@
 import React, { useState } from "react";
+import { createUseStyles } from "react-jss";
 
 import GameBoard from "./components/GameBoard";
 import Banner from "./components/Banner";
 
 import { GAME_STATUS } from "./constants";
 
+const useStyles = createUseStyles({
+  header: {
+    textAlign: "center"
+  },
+  footer: {
+    textAlign: "center"
+  }
+});
+
 const App = () => {
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.CREATING);
+  const classes = useStyles();
 
   const gameFinished = () => {
     setGameStatus(GAME_STATUS.FINISHED);
@@ -22,7 +33,7 @@ const App = () => {
 
   return (
     <div>
-      <header>
+      <header className={classes.header}>
         <h1>Card Match Game</h1>
       </header>
       <div>
@@ -35,8 +46,8 @@ const App = () => {
           <Banner handleClick={resetGame} />
         )}
       </div>
-      <footer>
-        Created by <a href="https://www.kazyamada.com/">Kaz Yamada</a>
+      <footer className={classes.footer}>
+        Created by <a href="https://www.kazyamada.com/">Kaz Yamada</a> |{" "}
         <a href="https://github.com/kaz-yamada/Card-Match-Game">Source</a>
       </footer>
     </div>
