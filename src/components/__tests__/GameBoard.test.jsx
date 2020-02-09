@@ -1,9 +1,21 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { shallow } from "enzyme";
+
 import GameBoard from "../GameBoard";
 
-test("renders the game board", () => {
-  const { getByText } = render(<GameBoard />);
-  const linkElement = getByText(/Game Board/i);
-  expect(linkElement).toBeInTheDocument();
+const initialProps = {
+  handleStart: jest.fn(),
+  handleFinish: jest.fn()
+};
+
+const setup = (props = initialProps, state = null) => {
+  const wrapper = shallow(<GameBoard {...props} />);
+  if (state) wrapper.setState(state);
+  return wrapper;
+};
+
+describe("GameBoard component", () => {
+  test("Renders the game board without crashing", () => {
+    setup();
+  });
 });

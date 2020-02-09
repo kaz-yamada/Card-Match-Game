@@ -16,14 +16,14 @@ const initalState = {
 };
 
 class GameBoard extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { ...initalState };
   }
 
   componentDidMount() {
     this.initgame();
-    this.props.startGame();
+    this.props.handleStart();
   }
 
   static getDerivedStateFromProps(props, newState) {
@@ -31,7 +31,7 @@ class GameBoard extends React.Component {
       newState = { ...initalState };
       newState.deck = game();
       newState.isLoading = false;
-      props.startGame();
+      props.handleStart();
     }
 
     return newState;

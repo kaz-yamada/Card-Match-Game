@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 import classnames from "classnames";
 
@@ -33,11 +33,15 @@ const useStyles = createUseStyles({
     backfaceVisibility: "hidden"
   },
   back: {
-    // transform: "rotateY(180deg)"
+    transform: "rotateY(180deg)",
+    top: "25%",
+    left: "35%"
   }
 });
 
 const Card = ({ data, handleClick, index }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const { id, url, status } = data;
   const classes = useStyles();
   const isSelected = status === CARD_STATUS.SELECTED;
@@ -49,6 +53,10 @@ const Card = ({ data, handleClick, index }) => {
     }
   };
 
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+  };
+
   return (
     <div
       className={classnames(classes.card, {
@@ -58,9 +66,11 @@ const Card = ({ data, handleClick, index }) => {
       onClick={onCardClick}
     >
       <div className={classnames(classes.inner, classes.front)}>
-        <img src={url} alt="card" />
+        <img src={url} alt="card" onLoad={handleImageLoad} />
       </div>
-      <div className={classnames(classes.inner, classes.back)}></div>
+      <div className={classnames(classes.inner, classes.back)}>
+        {!isLoaded && "Loading"}
+      </div>
     </div>
   );
 };

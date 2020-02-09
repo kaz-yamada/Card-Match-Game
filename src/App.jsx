@@ -39,7 +39,7 @@ const App = () => {
       <div>
         <GameBoard
           gameStatus={gameStatus}
-          startGame={setGameToInProgress}
+          handleStart={setGameToInProgress}
           handleFinish={gameFinished}
         />
         {gameStatus === GAME_STATUS.FINISHED && (
