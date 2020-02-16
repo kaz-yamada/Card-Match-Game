@@ -33,3 +33,15 @@ export const getRandomUrls = () => {
 
   return urlArray;
 };
+
+/**
+ * Check if the game is completed
+ * @param {*} deck
+ */
+export const checkGame = deck => {
+  const matches = Object.keys(deck).filter(
+    key => deck[key].status === CARD_STATUS.MATCHED
+  );
+
+  return matches.length === DECK_SIZE - 1;
+};

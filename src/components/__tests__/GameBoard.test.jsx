@@ -1,9 +1,11 @@
 import React from "react";
 import { shallow } from "enzyme";
 
+import { GAME_STATUS } from "../../constants";
 import GameBoard from "../GameBoard";
 
 const initialProps = {
+  gameStatus: GAME_STATUS.CREATING,
   handleStart: jest.fn(),
   handleFinish: jest.fn()
 };
@@ -14,7 +16,7 @@ const setup = (props = initialProps, state = null) => {
   return wrapper;
 };
 
-describe("GameBoard component", () => {
+describe("<GameBoard />", () => {
   test("Renders the game board without crashing", () => {
     setup();
   });

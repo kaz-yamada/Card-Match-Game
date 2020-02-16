@@ -4,6 +4,8 @@ import classnames from "classnames";
 
 import { CARD_STATUS, CARD_SIZES } from "../constants";
 
+import image from "../assets/placeholder.jpg";
+
 const useStyles = createUseStyles({
   card: {
     padding: 5,
@@ -14,7 +16,11 @@ const useStyles = createUseStyles({
     position: "relative",
     transition: "all 0.4s linear",
     transformStyle: "preserve-3d",
-    margin: "5px"
+    margin: "5px",
+    "& div": {
+      position: "absolute",
+      backfaceVisibility: "hidden"
+    }
   },
   selected: {
     borderColor: "blue",
@@ -27,10 +33,6 @@ const useStyles = createUseStyles({
     borderColor: "green",
     backgroundColor: "white",
     transform: "rotateY(180deg)"
-  },
-  inner: {
-    position: "absolute",
-    backfaceVisibility: "hidden"
   },
   back: {
     transform: "rotateY(180deg)",
@@ -65,12 +67,10 @@ const Card = ({ data, handleClick, index }) => {
       })}
       onClick={onCardClick}
     >
-      <div className={classnames(classes.inner, classes.front)}>
+      <div className={classes.front}>
         <img src={url} alt="card" onLoad={handleImageLoad} />
       </div>
-      <div className={classnames(classes.inner, classes.back)}>
-        {!isLoaded && "Loading"}
-      </div>
+      <div className={classes.back}>{!isLoaded && "Loading"}</div>
     </div>
   );
 };

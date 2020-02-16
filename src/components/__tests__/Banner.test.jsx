@@ -1,11 +1,11 @@
 import React from "react";
-import { mount } from "enzyme";
+import { shallow } from "enzyme";
 
 import Banner from "../Banner";
 
-const setup = () => mount(<Banner />);
+const setup = () => shallow(<Banner />);
 
-describe("Banner component", () => {
+describe("<Banner />", () => {
   test("Renders without crashing", () => {
     setup();
   });

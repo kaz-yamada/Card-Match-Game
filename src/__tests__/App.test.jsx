@@ -1,9 +1,8 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import ReactDOM from "react-dom";
 import App from "../App";
 
-test("renders the game board component", () => {
-  const { getByText } = render(<App />);
-  const titleElement = getByText(/Card Match Game/i);
-  expect(titleElement).toBeInTheDocument();
+test("Renders App component without crashing", () => {
+  const div = document.createElement("div");
+  ReactDOM.render(<App />, div);
 });
