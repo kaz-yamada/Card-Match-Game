@@ -11,11 +11,11 @@ const useStyles = createUseStyles({
   board: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
-    justifyItems: "center"
-  }
+    justifyItems: "center",
+  },
 });
 
-export default props => {
+const GameBoard = (props) => {
   const [deck, setDeck] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isChecking, setIsChecking] = useState(false);
@@ -30,7 +30,7 @@ export default props => {
    */
   const checkGameFinished = useCallback(() => {
     const matches = Object.keys(deck).filter(
-      key => deck[key].status === CARD_STATUS.MATCHED
+      (key) => deck[key].status === CARD_STATUS.MATCHED
     );
 
     if (matches.length === DECK_SIZE - 1) {
@@ -42,9 +42,9 @@ export default props => {
    * Find odd card out and flip it
    */
   const flipAllCards = useCallback(() => {
-    setDeck(prevDeck => {
+    setDeck((prevDeck) => {
       const key = Object.keys(deck).find(
-        key => deck[key].status === CARD_STATUS.HIDDEN
+        (key) => deck[key].status === CARD_STATUS.HIDDEN
       );
 
       if (key) {
@@ -52,7 +52,7 @@ export default props => {
 
         const newDeck = {
           ...deck,
-          [key]: remainder
+          [key]: remainder,
         };
 
         return newDeck;
@@ -81,7 +81,7 @@ export default props => {
       const newDeck = {
         ...deck,
         [firstCard.index]: first,
-        [secondCard.index]: second
+        [secondCard.index]: second,
       };
 
       setTimeout(() => {
@@ -173,3 +173,5 @@ export default props => {
     </div>
   );
 };
+
+export default GameBoard;

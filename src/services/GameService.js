@@ -6,7 +6,7 @@ const LIMIT = Math.ceil(DECK_SIZE / 2);
 /**
  * Create new game
  */
-export default () => {
+const gameService = () => {
   const urls = getRandomUrls();
   const deck = urls.concat(urls);
 
@@ -27,7 +27,7 @@ export const getRandomUrls = () => {
     urlArray.push({
       id: index,
       url: imageUrl + index,
-      status: CARD_STATUS.HIDDEN
+      status: CARD_STATUS.HIDDEN,
     });
   }
 
@@ -36,12 +36,14 @@ export const getRandomUrls = () => {
 
 /**
  * Check if the game is completed
- * @param {*} deck
+ * @param {Array} deck
  */
-export const checkGame = deck => {
+export const checkGame = (deck) => {
   const matches = Object.keys(deck).filter(
-    key => deck[key].status === CARD_STATUS.MATCHED
+    (key) => deck[key].status === CARD_STATUS.MATCHED
   );
 
   return matches.length === DECK_SIZE - 1;
 };
+
+export default gameService;

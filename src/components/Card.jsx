@@ -4,8 +4,6 @@ import classnames from "classnames";
 
 import { CARD_STATUS, CARD_SIZES } from "../constants";
 
-import image from "../assets/placeholder.jpg";
-
 const useStyles = createUseStyles({
   card: {
     padding: 5,
