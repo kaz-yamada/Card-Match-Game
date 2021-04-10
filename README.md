@@ -1,3 +1,7 @@
+# About this project
+
+[A Card matching game](https://en.wikipedia.org/wiki/Concentration_(card_game)) built in ReactJS, using the [Lorem Picsum API](https://picsum.photos/) for images.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 **Visit https://kaz-yamada.github.io/Card-Match-Game to view this project**
