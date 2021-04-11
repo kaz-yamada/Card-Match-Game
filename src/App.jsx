@@ -8,42 +8,32 @@ import { GAME_STATUS } from "./constants";
 
 const useStyles = createUseStyles({
   header: {
-    textAlign: "center"
+    textAlign: "center",
   },
   footer: {
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
+  root: {
+    fontFamily: "arial",
+  },
 });
 
 const App = () => {
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.CREATING);
+
   const classes = useStyles();
 
-  const gameFinished = () => {
-    setGameStatus(GAME_STATUS.FINISHED);
-  };
-
-  const resetGame = () => {
-    setGameStatus(GAME_STATUS.RESETTING);
-  };
-
-  const setGameToInProgress = () => {
-    setGameStatus(GAME_STATUS.IN_PROGRESS);
-  };
+  const handleStatusUpdate = (newStatus) => setGameStatus(newStatus);
 
   return (
-    <div>
+    <div className={classes.root}>
       <header className={classes.header}>
         <h1>Card Match Game</h1>
       </header>
       <div>
-        <GameBoard
-          gameStatus={gameStatus}
-          handleStart={setGameToInProgress}
-          handleFinish={gameFinished}
-        />
+        <GameBoard gameStatus={gameStatus} onGameUpdate={handleStatusUpdate} />
         {gameStatus === GAME_STATUS.FINISHED && (
-          <Banner handleClick={resetGame} />
+          <Banner onReset={handleStatusUpdate} />
         )}
       </div>
       <footer className={classes.footer}>

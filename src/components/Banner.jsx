@@ -1,5 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import { GAME_STATUS } from "../constants";
 
 const useStyles = createUseStyles({
   root: {
@@ -11,21 +12,26 @@ const useStyles = createUseStyles({
     height: 200,
     background: "aliceblue",
     justifyItems: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   button: {
     background: "white",
     border: "solid 1px black",
-    padding: "1em 2em"
-  }
+    padding: "1em 2em",
+  },
 });
 
-const Banner = ({ handleClick }) => {
+const Banner = ({ onReset }) => {
   const classes = useStyles();
+
+  const handleReset = () => {
+    onReset(GAME_STATUS.RESETTING);
+  };
+
   return (
     <div className={classes.root}>
       <div>Congratulations, you've won!</div>
-      <button className={classes.button} onClick={handleClick}>
+      <button className={classes.button} onClick={handleReset}>
         Play Again
       </button>
     </div>

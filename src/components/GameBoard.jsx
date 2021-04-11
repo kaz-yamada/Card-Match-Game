@@ -15,18 +15,18 @@ const useStyles = createUseStyles({
   },
 });
 
-const GameBoard = (props) => {
+const GameBoard = ({ gameStatus, onGameUpdate }) => {
   const [deck, setDeck] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [firstCard, setFirstCard] = useState(null);
   const [secondCard, setSecondCard] = useState(null);
-  const [count, setCount] = useState(0);
+  const [faceUpCounter, setFaceUpCounter] = useState(0);
+
   const classes = useStyles();
 
   /**
    * Check if the all cards are matched and game is finished
-   * @param {*} newDeck
    */
   const checkGameFinished = useCallback(() => {
     const matches = Object.keys(deck).filter(
@@ -34,9 +34,9 @@ const GameBoard = (props) => {
     );
 
     if (matches.length === DECK_SIZE - 1) {
-      props.handleFinish();
+      onGameUpdate(GAME_STATUS.FINISHED);
     }
-  }, [deck, props]);
+  }, [deck, onGameUpdate]);
 
   /**
    * Find odd card out and flip it
@@ -114,10 +114,10 @@ const GameBoard = (props) => {
   };
 
   const handleClick = (index, id) => {
-    if (!isChecking && count < 2) {
-      const newCount = count + 1;
+    if (!isChecking && faceUpCounter < 2) {
+      const newCount = faceUpCounter + 1;
       const newCard = { index, id };
-      setCount(newCount);
+      setFaceUpCounter(newCount);
 
       if (newCount === 1) {
         setFirstCard(newCard);
@@ -131,30 +131,33 @@ const GameBoard = (props) => {
   };
 
   useEffect(() => {
-    if (count === 2) {
-      setCount(0);
+    if (faceUpCounter === 2) {
+      setFaceUpCounter(0);
       checkPair();
     }
-  }, [count, checkPair]);
+  }, [faceUpCounter, checkPair]);
 
   useEffect(() => {
-    const { gameStatus } = props;
-
-    // Initialise game
+    // Set up the game
+    console.log(gameStatus);
     if (
       gameStatus === GAME_STATUS.CREATING ||
       gameStatus === GAME_STATUS.RESETTING
     ) {
-      setIsLoading(true);
-      setDeck(GameService());
-      setIsLoading(false);
-      props.handleStart();
+      if (!isLoading) {
+        setIsLoading(true);
+        GameService((data) => {
+          setDeck(data);
+          setIsLoading(false);
+          onGameUpdate(GAME_STATUS.IN_PROGRESS);
+        });
+      }
     } else if (gameStatus === GAME_STATUS.IN_PROGRESS) {
       checkGameFinished();
     } else if (gameStatus === GAME_STATUS.FINISHED) {
       flipAllCards();
     }
-  }, [checkGameFinished, flipAllCards, props]);
+  }, [checkGameFinished, flipAllCards, gameStatus, onGameUpdate]);
 
   return (
     <div className={classes.board}>

@@ -1,13 +1,13 @@
-import { CARD_STATUS, DECK_SIZE, CARD_SIZES } from "../constants";
+import { CARD_STATUS, DECK_SIZE, CARD_SIZES, API_PAGE_SIZE } from "../constants";
 
 const BASE_URL = "https://picsum.photos";
-const LIMIT = Math.ceil(DECK_SIZE / 2);
 
 /**
  * Create new game
  */
-const gameService = () => {
-  const urls = getRandomUrls();
+const gameService = async (callback) => {
+  console.log('fetching');
+  const urls = await getRandomUrls();
   const deck = urls.concat(urls);
 
   while (deck.length > DECK_SIZE) {
@@ -16,19 +16,39 @@ const gameService = () => {
 
   const shuffledDeck = deck.sort(() => 0.5 - Math.random());
 
-  return shuffledDeck;
+  callback(shuffledDeck)
 };
 
-export const getRandomUrls = () => {
-  const imageUrl = `${BASE_URL}/${CARD_SIZES.width}/${CARD_SIZES.height}?random=`;
-  const urlArray = [];
+const fetchImages = async (page) => {
+  const apiUrl = `${BASE_URL}/v2/list?page=${page}&limit=100`;
+  const res = await fetch(apiUrl);
+  const data = await res.json();
 
-  for (let index = 0; index < LIMIT; index++) {
-    urlArray.push({
-      id: index,
-      url: imageUrl + index,
-      status: CARD_STATUS.HIDDEN,
-    });
+  return data;
+}
+
+export const getRandomUrls = async () => {
+  const urlArray = [];
+  const imageSet = new Set();
+  const page = Math.floor(Math.random() * API_PAGE_SIZE) + 1;
+  const urlList = await fetchImages(page);
+
+  while (imageSet.size !== Math.ceil(DECK_SIZE / 2)) {
+    const i = Math.floor(Math.random() * urlList.length) + 1
+
+    if (urlList[i]) {
+      const { id } = urlList[i]
+      console.log(id);
+
+      imageSet.add(id)
+
+      urlArray.push({
+        id,
+        url: `${BASE_URL}/id/${id}/${CARD_SIZES.width}/${CARD_SIZES.height}`,
+        status: CARD_STATUS.HIDDEN,
+      });
+
+    }
   }
 
   return urlArray;
