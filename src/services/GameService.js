@@ -5,8 +5,7 @@ const BASE_URL = "https://picsum.photos";
 /**
  * Create new game
  */
-const gameService = async (callback) => {
-  console.log('fetching');
+const gameService = async () => {
   const urls = await getRandomUrls();
   const deck = urls.concat(urls);
 
@@ -16,7 +15,7 @@ const gameService = async (callback) => {
 
   const shuffledDeck = deck.sort(() => 0.5 - Math.random());
 
-  callback(shuffledDeck)
+  return shuffledDeck;
 };
 
 const fetchImages = async (page) => {
@@ -33,37 +32,25 @@ export const getRandomUrls = async () => {
   const page = Math.floor(Math.random() * API_PAGE_SIZE) + 1;
   const urlList = await fetchImages(page);
 
-  while (imageSet.size !== Math.ceil(DECK_SIZE / 2)) {
+  // Randomly pick cards from list from API
+  while (imageSet.size < Math.ceil(DECK_SIZE / 2)) {
     const i = Math.floor(Math.random() * urlList.length) + 1
 
     if (urlList[i]) {
       const { id } = urlList[i]
-      console.log(id);
 
-      imageSet.add(id)
-
-      urlArray.push({
-        id,
-        url: `${BASE_URL}/id/${id}/${CARD_SIZES.width}/${CARD_SIZES.height}`,
-        status: CARD_STATUS.HIDDEN,
-      });
-
+      if (!imageSet.has(id)) {
+        imageSet.add(id)
+        urlArray.push({
+          id,
+          url: `${BASE_URL}/id/${id}/${CARD_SIZES.width}/${CARD_SIZES.height}`,
+          status: CARD_STATUS.HIDDEN,
+        });
+      }
     }
   }
 
   return urlArray;
-};
-
-/**
- * Check if the game is completed
- * @param {Array} deck
- */
-export const checkGame = (deck) => {
-  const matches = Object.keys(deck).filter(
-    (key) => deck[key].status === CARD_STATUS.MATCHED
-  );
-
-  return matches.length === DECK_SIZE - 1;
 };
 
 export default gameService;

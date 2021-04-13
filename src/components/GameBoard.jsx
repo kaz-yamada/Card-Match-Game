@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { createUseStyles } from "react-jss";
 
 import Card from "./Card";
@@ -17,50 +17,15 @@ const useStyles = createUseStyles({
 
 const GameBoard = ({ gameStatus, onGameUpdate }) => {
   const [deck, setDeck] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [firstCard, setFirstCard] = useState(null);
   const [secondCard, setSecondCard] = useState(null);
   const [faceUpCounter, setFaceUpCounter] = useState(0);
 
+  const flipCounter = useRef(0);
+  const [startTime, setStartTime] = useState(null);
+
   const classes = useStyles();
-
-  /**
-   * Check if the all cards are matched and game is finished
-   */
-  const checkGameFinished = useCallback(() => {
-    const matches = Object.keys(deck).filter(
-      (key) => deck[key].status === CARD_STATUS.MATCHED
-    );
-
-    if (matches.length === DECK_SIZE - 1) {
-      onGameUpdate(GAME_STATUS.FINISHED);
-    }
-  }, [deck, onGameUpdate]);
-
-  /**
-   * Find odd card out and flip it
-   */
-  const flipAllCards = useCallback(() => {
-    setDeck((prevDeck) => {
-      const key = Object.keys(deck).find(
-        (key) => deck[key].status === CARD_STATUS.HIDDEN
-      );
-
-      if (key) {
-        const remainder = { ...deck[key], status: CARD_STATUS.SELECTED };
-
-        const newDeck = {
-          ...deck,
-          [key]: remainder,
-        };
-
-        return newDeck;
-      }
-
-      return prevDeck;
-    });
-  }, [deck]);
 
   /**
    * Check if the flipped cards match
@@ -113,8 +78,17 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
     setDeck(newDeck);
   };
 
+  /**
+   *
+   * @param {*} index
+   * @param {*} id
+   */
   const handleClick = (index, id) => {
-    if (!isChecking && faceUpCounter < 2) {
+    if (isChecking) return;
+
+    flipCounter.current++;
+
+    if (faceUpCounter < 2) {
       const newCount = faceUpCounter + 1;
       const newCard = { index, id };
       setFaceUpCounter(newCount);
@@ -130,38 +104,76 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
     }
   };
 
-  useEffect(() => {
-    if (faceUpCounter === 2) {
+  /**
+   * Find odd card out and flip it
+   */
+  const flipAllCards = useCallback(() => {
+    setDeck((prevDeck) => {
+      const lastCard = Object.keys(deck).find(
+        (key) => deck[key].status === CARD_STATUS.HIDDEN
+      );
+
+      if (lastCard) {
+        const remainder = { ...deck[lastCard], status: CARD_STATUS.SELECTED };
+
+        const newDeck = {
+          ...deck,
+          [lastCard]: remainder,
+        };
+
+        return newDeck;
+      }
+
+      return prevDeck;
+    });
+  }, [deck]);
+
+  /**
+   * Check if the all cards are matched and game is finished
+   */
+  const checkGameFinished = useCallback(() => {
+    console.log(flipCounter.current);
+    if (faceUpCounter === 0) {
+      const matches = Object.keys(deck).filter(
+        (key) => deck[key].status === CARD_STATUS.MATCHED
+      );
+
+      // Game is finished
+      if (matches.length === DECK_SIZE - 1) {
+        onGameUpdate(GAME_STATUS.FINISHED, {
+          flips: flipCounter.current,
+          time: `${(new Date() - startTime) / 1000} seconds`,
+        });
+      }
+    } else if (faceUpCounter === 2) {
       setFaceUpCounter(0);
       checkPair();
     }
-  }, [faceUpCounter, checkPair]);
+  }, [checkPair, deck, faceUpCounter, onGameUpdate, startTime]);
+
+  const initialiseGame = useCallback(async () => {
+    onGameUpdate(GAME_STATUS.LOADING);
+    setDeck(await GameService());
+    flipCounter.current = 0;
+    setStartTime(new Date());
+    onGameUpdate(GAME_STATUS.IN_PROGRESS);
+  }, [onGameUpdate]);
 
   useEffect(() => {
-    // Set up the game
     console.log(gameStatus);
-    if (
-      gameStatus === GAME_STATUS.CREATING ||
-      gameStatus === GAME_STATUS.RESETTING
-    ) {
-      if (!isLoading) {
-        setIsLoading(true);
-        GameService((data) => {
-          setDeck(data);
-          setIsLoading(false);
-          onGameUpdate(GAME_STATUS.IN_PROGRESS);
-        });
-      }
+    // Set up the game
+    if (gameStatus === GAME_STATUS.CREATING) {
+      initialiseGame();
     } else if (gameStatus === GAME_STATUS.IN_PROGRESS) {
       checkGameFinished();
     } else if (gameStatus === GAME_STATUS.FINISHED) {
       flipAllCards();
     }
-  }, [checkGameFinished, flipAllCards, gameStatus, onGameUpdate]);
+  }, [checkGameFinished, initialiseGame, flipAllCards, gameStatus]);
 
   return (
     <div className={classes.board}>
-      {isLoading
+      {gameStatus === GAME_STATUS.LOADING
         ? "Loading..."
         : Object.entries(deck).map(([key, value]) => {
             return (

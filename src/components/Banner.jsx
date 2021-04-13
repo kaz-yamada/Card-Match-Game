@@ -21,16 +21,25 @@ const useStyles = createUseStyles({
   },
 });
 
-const Banner = ({ onReset }) => {
+const Banner = ({ onReset, results }) => {
   const classes = useStyles();
 
   const handleReset = () => {
-    onReset(GAME_STATUS.RESETTING);
+    onReset(GAME_STATUS.CREATING);
   };
 
   return (
     <div className={classes.root}>
       <div>Congratulations, you've won!</div>
+      <div>
+        <div>
+          <b>Cards flipped:</b>
+          {results.flips} times
+        </div>
+        <div>
+          <b>Time taken:</b> {results.time}
+        </div>
+      </div>
       <button className={classes.button} onClick={handleReset}>
         Play Again
       </button>

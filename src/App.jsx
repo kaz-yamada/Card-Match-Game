@@ -20,10 +20,16 @@ const useStyles = createUseStyles({
 
 const App = () => {
   const [gameStatus, setGameStatus] = useState(GAME_STATUS.CREATING);
+  const [gameResults, setGameResults] = useState({});
 
   const classes = useStyles();
 
-  const handleStatusUpdate = (newStatus) => setGameStatus(newStatus);
+  const handleStatusUpdate = (newStatus, results) => {
+    setGameStatus(newStatus);
+    if (newStatus === GAME_STATUS.FINISHED) {
+      setGameResults(results);
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -33,7 +39,7 @@ const App = () => {
       <div>
         <GameBoard gameStatus={gameStatus} onGameUpdate={handleStatusUpdate} />
         {gameStatus === GAME_STATUS.FINISHED && (
-          <Banner onReset={handleStatusUpdate} />
+          <Banner onReset={handleStatusUpdate} results={gameResults} />
         )}
       </div>
       <footer className={classes.footer}>

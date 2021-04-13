@@ -17,26 +17,26 @@ const useStyles = createUseStyles({
     margin: "5px",
     "& div": {
       position: "absolute",
-      backfaceVisibility: "hidden"
-    }
+      backfaceVisibility: "hidden",
+    },
   },
   selected: {
     borderColor: "blue",
-    transform: "rotateY(180deg)"
+    transform: "rotateY(180deg)",
   },
   front: {
-    transform: "rotateY(180deg)"
+    transform: "rotateY(180deg)",
   },
   matched: {
     borderColor: "green",
     backgroundColor: "white",
-    transform: "rotateY(180deg)"
+    transform: "rotateY(180deg)",
   },
   back: {
     transform: "rotateY(180deg)",
     top: "25%",
-    left: "35%"
-  }
+    left: "35%",
+  },
 });
 
 const Card = ({ data, handleClick, index }) => {
@@ -61,13 +61,14 @@ const Card = ({ data, handleClick, index }) => {
     <div
       className={classnames(classes.card, {
         [classes.selected]: isSelected,
-        [classes.matched]: isMatched
+        [classes.matched]: isMatched,
       })}
       onClick={onCardClick}
     >
       <div className={classes.front}>
         <img src={url} alt="card" onLoad={handleImageLoad} />
       </div>
+      {data.id}
       <div className={classes.back}>{!isLoaded && "Loading"}</div>
     </div>
   );
