@@ -132,7 +132,6 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
    * Check if the all cards are matched and game is finished
    */
   const checkGameFinished = useCallback(() => {
-    console.log(flipCounter.current);
     if (faceUpCounter === 0) {
       const matches = Object.keys(deck).filter(
         (key) => deck[key].status === CARD_STATUS.MATCHED
@@ -160,7 +159,6 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
   }, [onGameUpdate]);
 
   useEffect(() => {
-    console.log(gameStatus);
     // Set up the game
     if (gameStatus === GAME_STATUS.CREATING) {
       initialiseGame();

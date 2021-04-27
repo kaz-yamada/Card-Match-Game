@@ -68,7 +68,6 @@ const Card = ({ data, handleClick, index }) => {
       <div className={classes.front}>
         <img src={url} alt="card" onLoad={handleImageLoad} />
       </div>
-      {data.id}
       <div className={classes.back}>{!isLoaded && "Loading"}</div>
     </div>
   );
