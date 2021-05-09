@@ -23,7 +23,7 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
   const [faceUpCounter, setFaceUpCounter] = useState(0);
 
   const flipCounter = useRef(0);
-  const [startTime, setStartTime] = useState(null);
+  const startTime = useRef(new Date());
 
   const classes = useStyles();
 
@@ -141,7 +141,7 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
       if (matches.length === DECK_SIZE - 1) {
         onGameUpdate(GAME_STATUS.FINISHED, {
           flips: flipCounter.current,
-          time: `${(new Date() - startTime) / 1000} seconds`,
+          time: `${(new Date() - startTime.current) / 1000} seconds`,
         });
       }
     } else if (faceUpCounter === 2) {
@@ -154,7 +154,6 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
     onGameUpdate(GAME_STATUS.LOADING);
     setDeck(await GameService());
     flipCounter.current = 0;
-    setStartTime(new Date());
     onGameUpdate(GAME_STATUS.IN_PROGRESS);
   }, [onGameUpdate]);
 
