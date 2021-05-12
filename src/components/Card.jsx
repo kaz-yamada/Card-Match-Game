@@ -29,7 +29,6 @@ const useStyles = createUseStyles({
   },
   matched: {
     borderColor: "green",
-    backgroundColor: "white",
     transform: "rotateY(180deg)",
   },
   back: {

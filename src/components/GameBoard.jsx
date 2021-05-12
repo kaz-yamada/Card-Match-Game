@@ -154,6 +154,7 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
     onGameUpdate(GAME_STATUS.LOADING);
     setDeck(await GameService());
     flipCounter.current = 0;
+    startTime.current = new Date();
     onGameUpdate(GAME_STATUS.IN_PROGRESS);
   }, [onGameUpdate]);
 
