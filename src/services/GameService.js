@@ -1,6 +1,4 @@
-import { CARD_STATUS, DECK_SIZE, CARD_SIZES, API_PAGE_SIZE } from "../constants";
-
-const BASE_URL = "https://picsum.photos";
+import { CARD_STATUS, DECK_SIZE, CARD_SIZES, API_PAGE_SIZE, BASE_URL } from "../constants";
 
 /**
  * Create new game
@@ -15,7 +13,11 @@ const gameService = async () => {
 
   const shuffledDeck = deck.sort(() => 0.5 - Math.random());
 
-  return shuffledDeck;
+  // return shuffledDeck;
+
+  return new Promise((resolve, reject) => {
+    resolve(shuffledDeck)
+  })
 };
 
 const fetchImages = async (page) => {

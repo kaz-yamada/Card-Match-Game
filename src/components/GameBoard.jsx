@@ -24,6 +24,7 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
 
   const flipCounter = useRef(0);
   const startTime = useRef(new Date());
+  const isMounted = useRef(false);
 
   const classes = useStyles();
 
@@ -151,39 +152,72 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
   }, [checkPair, deck, faceUpCounter, onGameUpdate, startTime]);
 
   const initialiseGame = useCallback(async () => {
-    onGameUpdate(GAME_STATUS.LOADING);
-    setDeck(await GameService());
-    flipCounter.current = 0;
-    startTime.current = new Date();
-    onGameUpdate(GAME_STATUS.IN_PROGRESS);
+    try {
+      const newDeck = await GameService();
+      setDeck(newDeck);
+      flipCounter.current = 0;
+      startTime.current = new Date();
+      onGameUpdate(GAME_STATUS.IN_PROGRESS);
+    } catch (error) {
+      console.error(error);
+    }
   }, [onGameUpdate]);
 
+  /**
+   * Initial render
+   */
   useEffect(() => {
-    // Set up the game
-    if (gameStatus === GAME_STATUS.CREATING) {
+    isMounted.current = true;
+
+    if (isMounted.current && gameStatus === GAME_STATUS.CREATING) {
       initialiseGame();
-    } else if (gameStatus === GAME_STATUS.IN_PROGRESS) {
-      checkGameFinished();
-    } else if (gameStatus === GAME_STATUS.FINISHED) {
-      flipAllCards();
     }
-  }, [checkGameFinished, initialiseGame, flipAllCards, gameStatus]);
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, [gameStatus, initialiseGame]);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      switch (gameStatus) {
+        case GAME_STATUS.CREATING:
+          break;
+
+        case GAME_STATUS.IN_PROGRESS:
+          checkGameFinished();
+          break;
+
+        case GAME_STATUS.FINISHED:
+          flipAllCards();
+          break;
+
+        default:
+          break;
+      }
+    }
+  }, [deck, checkGameFinished, flipAllCards, gameStatus, onGameUpdate]);
+
+  if (gameStatus === GAME_STATUS.LOADING) {
+    return <span>Loading...</span>;
+  }
 
   return (
-    <div className={classes.board}>
-      {gameStatus === GAME_STATUS.LOADING
-        ? "Loading..."
-        : Object.entries(deck).map(([key, value]) => {
-            return (
-              <Card
-                key={key}
-                index={key}
-                data={value}
-                handleClick={handleClick}
-              />
-            );
-          })}
-    </div>
+    <>
+      <div data-testid="flip-counter">Flips: {flipCounter.current}</div>
+      <div className={classes.board}>
+        {Object.entries(deck).map(([key, value]) => {
+          return (
+            <Card
+              key={key}
+              index={key}
+              data={value}
+              handleClick={handleClick}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 };
 

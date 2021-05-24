@@ -32,11 +32,10 @@ const Banner = ({ onReset, results }) => {
     <div className={classes.root}>
       <div>Congratulations, you've won!</div>
       <div>
-        <div>
-          <b>Cards flipped:</b>
-          {results.flips} times
+        <div data-testid="flips">
+          <b>Cards flipped:</b> {results.flips} times
         </div>
-        <div>
+        <div data-testid="time">
           <b>Time taken:</b> {results.time}
         </div>
       </div>

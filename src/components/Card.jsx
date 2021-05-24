@@ -63,6 +63,7 @@ const Card = ({ data, handleClick, index }) => {
         [classes.matched]: isMatched,
       })}
       onClick={onCardClick}
+      data-testid="card-root"
     >
       <div className={classes.front}>
         <img src={url} alt="card" onLoad={handleImageLoad} />
