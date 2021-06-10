@@ -4,11 +4,11 @@
   "homepage": "https://kaz-yamada.github.io/Card-Match-Game",
   "private": true,
   "dependencies": {
-    "classnames": "^2.2.6",
-    "gh-pages": "^2.2.0",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-jss": "^10.4.0",
+    "classnames": "^2.3.1",
+    "gh-pages": "^3.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-jss": "^10.6.0",
     "react-scripts": "^4.0.3"
   },
   "devDependencies": {
@@ -16,10 +16,11 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
     "@types/jest": "^26.0.23",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.5",
+    "coveralls": "^3.1.0",
+    "jscoverage": "^0.6.0",
     "msw": "^0.29.0",
-    "react-test-renderer": "^16.14.0"
+    "nodeunit": "^0.11.3",
+    "react-test-renderer": "^17.0.2"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -27,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:coverage": "react-scripts test --coverage",
+    "test:coverage": "react-scripts test --env=jsdom  --coverage --watchAll",    
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

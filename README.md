@@ -1,3 +1,5 @@
+[![Build Status](https://www.travis-ci.com/kaz-yamada/Card-Match-Game.svg?branch=master)](https://www.travis-ci.com/kaz-yamada/Card-Match-Game) [![Coverage Status](https://coveralls.io/repos/github/kaz-yamada/Card-Match-Game/badge.svg?branch=master)](https://coveralls.io/github/kaz-yamada/Card-Match-Game?branch=master)
+
 # About this project
 
 [A Card matching game](https://en.wikipedia.org/wiki/Concentration_(card_game)) built in ReactJS, using the [Lorem Picsum API](https://picsum.photos/) for images.
