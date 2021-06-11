@@ -7,15 +7,23 @@ import Banner from "./components/Banner";
 import { GAME_STATUS } from "./constants";
 
 const useStyles = createUseStyles({
+  "@global": {
+    "html, body": {
+      margin: 0,
+    },
+    "*": {
+      fontFamily: "arial",
+      boxSizing: "border-box",
+    },
+  },
   header: {
     textAlign: "center",
   },
   footer: {
     textAlign: "center",
+    padding: "12px 0",
   },
-  root: {
-    fontFamily: "arial",
-  },
+  root: {},
 });
 
 const App = () => {

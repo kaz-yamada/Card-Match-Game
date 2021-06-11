@@ -13,6 +13,12 @@ const useStyles = createUseStyles({
     gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
     justifyItems: "center",
   },
+  header: {
+    display: "grid",
+    gridTemplateRows: "auto",
+    justifyContent: "center",
+    margin: 12,
+  },
 });
 
 const GameBoard = ({ gameStatus, onGameUpdate }) => {
@@ -204,7 +210,11 @@ const GameBoard = ({ gameStatus, onGameUpdate }) => {
 
   return (
     <>
-      <div data-testid="flip-counter">Flips: {flipCounter.current}</div>
+      <div className={classes.header}>
+        <div data-testid="flip-counter">
+          <b>Flips:</b> <span>{flipCounter.current}</span>
+        </div>
+      </div>
       <div className={classes.board}>
         {Object.entries(deck).map(([key, value]) => {
           return (
